@@ -1,5 +1,5 @@
 import { Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import Redirection from "../../../../components/common/Redirection";
 import { axiosInstance } from "../../../../api/axios";
@@ -26,7 +26,7 @@ export default function Kakao() {
         email,
       });
       setUserData({
-        _id: user._id,
+        id: user.id,
         kakaoId: user.kakaoId,
         profileImage: user.profileImage,
         nickname: user.nickname,
@@ -37,11 +37,26 @@ export default function Kakao() {
       setError(e instanceof Error ? e.message : "unknown error");
     }
   };
+
+  const fetchAndSaveUser = useCallback(async () => {
+    setError("");
+    try {
+      if (accessToken) sessionStorage.setItem("access_token", accessToken);
+      const { data } = await axiosInstance.get("/auth/me");
+      setUserData(data);
+      navigate("/");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "unknow error");
+    }
+  }, [accessToken, navigate, setUserData]);
+
   useEffect(() => {
     if (emailYn === "N") {
       setShowForm(true);
+    } else {
+      fetchAndSaveUser();
     }
-  }, [emailYn]);
+  }, [emailYn, fetchAndSaveUser]);
   return (
     <>
       <>
