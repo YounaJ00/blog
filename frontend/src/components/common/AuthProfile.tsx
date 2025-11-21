@@ -4,10 +4,9 @@ import { useAuthStore } from "../../store/authStore";
 
 export default function AuthProfile() {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const logout = () => {
-    console.log("logout");
-  };
+
   return (
     <>
       <div className="relative">
