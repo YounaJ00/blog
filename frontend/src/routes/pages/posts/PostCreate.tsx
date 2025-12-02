@@ -27,6 +27,16 @@ export default function PostCreate() {
     content: "",
   });
 
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      console.log(reader.result as string);
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+
   const handleChangeFormState = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -118,6 +128,7 @@ export default function PostCreate() {
                 id="image"
                 accept="image/*"
                 className="hidden"
+                onChange={handleChangeImage}
               />
               <label
                 htmlFor="image"
