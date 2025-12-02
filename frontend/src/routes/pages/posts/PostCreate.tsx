@@ -27,11 +27,26 @@ export default function PostCreate() {
     content: "",
   });
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   const [previewImage, setPreviewImage] = useState("");
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
+    if (!selectedFile) return null;
+
+    // 유효성 검사(확장자, 용량)
+    const allowedExtenstions = ["png", "webp", "jpeg", "jpg"];
+    const fileExtension = selectedFile.name.split(".").pop()?.toLowerCase(); // ***.jpg
+    if (!fileExtension || !allowedExtenstions.includes(fileExtension)) {
+      alert(`허용된 이미지 확장자는 ${allowedExtenstions.join(", ")} 입니다.`);
+      e.target.value = ""; // 초기화 -> 안하면 allowed 안된 확장자 이미지가 alert 만 뜨고 들어옴.
+      return null;
+    }
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      alert("이미지 용량은 10MB 이하만 가능합니다.");
+      e.target.value = "";
+      return null;
+    }
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -143,7 +158,7 @@ export default function PostCreate() {
                   <ImagePlus className="h-12 w-12 text-gray-400 mb-3" />
                   <span className="text-gray-300">Click to upload image</span>
                   <span className="text-gray-500 text-sm mt-1">
-                    PNG, JPG up to 10MB
+                    PNG, WEBP, JPEG, JPG up to 10MB
                   </span>
                 </label>
               </div>
