@@ -27,12 +27,15 @@ export default function PostCreate() {
     content: "",
   });
 
+  const [previewImage, setPreviewImage] = useState("");
+
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
+
     const reader = new FileReader();
     reader.onloadend = () => {
-      console.log(reader.result as string);
+      setPreviewImage(reader.result as string);
     };
     reader.readAsDataURL(selectedFile);
   };
@@ -106,41 +109,45 @@ export default function PostCreate() {
           </label>
           <div className="relative">
             {/* 이미지 선택 후 화면 (미리보기) */}
-            {/* <div className="relative w-full aspect-video mb-4">
-              <img
-                src={
-                  "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                }
-                alt="Preview"
-                className="w-full h-full object-cover rounded-lg"
-              />
-              <button
-                type="button"
-                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors"
-              >
-                ✕
-              </button>
-            </div> */}
-            {/* 이미지 선택 전 화면 */}
-            <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                className="hidden"
-                onChange={handleChangeImage}
-              />
-              <label
-                htmlFor="image"
-                className="flex flex-col items-center cursor-pointer"
-              >
-                <ImagePlus className="h-12 w-12 text-gray-400 mb-3" />
-                <span className="text-gray-300">Click to upload image</span>
-                <span className="text-gray-500 text-sm mt-1">
-                  PNG, JPG up to 10MB
-                </span>
-              </label>
-            </div>
+            {previewImage ? (
+              <div className="relative w-full aspect-video mb-4">
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors cursor-pointer"
+                  onClick={() => {
+                    // preview 이미지 제거(= 빈문자열로 초기화)
+                    setPreviewImage("");
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center">
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleChangeImage}
+                />
+                <label
+                  htmlFor="image"
+                  className="flex flex-col items-center cursor-pointer"
+                >
+                  <ImagePlus className="h-12 w-12 text-gray-400 mb-3" />
+                  <span className="text-gray-300">Click to upload image</span>
+                  <span className="text-gray-500 text-sm mt-1">
+                    PNG, JPG up to 10MB
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
 
