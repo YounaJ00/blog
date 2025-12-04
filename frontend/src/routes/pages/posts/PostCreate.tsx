@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
 import { axiosInstance } from "../../../api/axios";
@@ -93,7 +93,7 @@ export default function PostCreate() {
           newErrors.content = "Please enter the content";
         if (Object.keys(newErrors).length > 0) {
           setErrorState(newErrors);
-          return null;
+          return;
         }
 
         let thumbnail = "";
@@ -110,6 +110,18 @@ export default function PostCreate() {
           );
           // 이미지 업로드가 성공했으면 url 을 thumbnail에 할당
           thumbnail = url;
+        }
+        // 게시글 등록 수행
+        const { status } = await axiosInstance.post("/posts", {
+          title: formState.title,
+          category: formState.category,
+          thumbnail: thumbnail,
+          content: formState.content,
+        });
+
+        if (status === 201) {
+          alert("Post added!");
+          navigate("/");
         }
       } catch (e) {
         console.error(e instanceof Error ? e.message : "unknown error");
@@ -241,8 +253,14 @@ export default function PostCreate() {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="px-6 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors"
+            className="px-6 py-2.5 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors disabled:bg-gray-400"
+            disabled={isPending}
           >
+            {isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Publish Post"
+            )}
             Publish Post
           </button>
           <button
