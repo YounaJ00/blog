@@ -1,6 +1,8 @@
+import axios from "axios";
 import { ImagePlus } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useNavigate } from "react-router";
+import { axiosInstance } from "../../../api/axios";
 
 const categories = [
   "",
@@ -92,6 +94,22 @@ export default function PostCreate() {
         if (Object.keys(newErrors).length > 0) {
           setErrorState(newErrors);
           return null;
+        }
+
+        let thumbnail = "";
+        if (previewImage) {
+          const formData = new FormData();
+          formData.append("file", previewImage);
+          formData.append("upload_preset", "react_blog");
+
+          const {
+            data: { url },
+          } = await axios.post(
+            "https://api.cloudinary.com/v1_1/dp9cgydrb/image/upload",
+            formData
+          );
+          // 이미지 업로드가 성공했으면 url 을 thumbnail에 할당
+          thumbnail = url;
         }
       } catch (e) {
         console.error(e instanceof Error ? e.message : "unknown error");
