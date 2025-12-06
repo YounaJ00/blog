@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { Link } from "react-router";
 
@@ -30,7 +31,9 @@ export default function FeaturedPost({ post }: { post: Post }) {
             <p className="text-sm font-medium"></p>
             <div className="flex items-center text-xs text-gray-300">
               <CalendarDays className="h-3 w-3 mr-1" aria-hidden="true" />
-              <span>{post.createdAt}</span>
+              <span>
+                {format(new Date(post.createdAt), "yyyy-MM-dd HH:mm")}
+              </span>
             </div>
           </div>
         </div>
