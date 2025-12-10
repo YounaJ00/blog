@@ -4,11 +4,12 @@ import AdBanner from "../../../components/common/AdBanner";
 import PostGrid from "../../../components/post/PostGrid";
 import CommentForm from "../../../components/comment/CommentForm";
 import CommentComponent from "../../../components/comment/CommentComponent";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { format } from "date-fns";
 import { useAuthStore } from "../../../store/authStore";
 
 export default function PostRead() {
+  const navigate = useNavigate();
   const { post, relatedPosts }: { post: Post; relatedPosts: Post[] } =
     useLoaderData();
   const user = useAuthStore((state) => state.user);
@@ -35,11 +36,17 @@ export default function PostRead() {
           </span>
           {post.author._id === user?.id && (
             <div className="flex gap-2">
-              <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer">
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
+                onClick={() => navigate(`/edit/${post._id}`)}
+              >
                 <Pencil className="w-4 h-4" />
                 Edit
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors cursor-pointer">
+              <button
+                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors cursor-pointer"
+                onClick={() => setShowDeleteConfirm(true)}
+              >
                 <Trash2 className="w-4 h-4" />
                 Delete
               </button>
