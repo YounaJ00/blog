@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ImagePlus, Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState, useTransition } from "react";
+import { useLoaderData, useNavigate } from "react-router";
 import { axiosInstance } from "../../../api/axios";
 
 const categories = [
@@ -22,6 +22,7 @@ interface FormStateType {
 }
 export default function PostCreate() {
   const navigate = useNavigate();
+  const post: Post = useLoaderData();
 
   const [formState, setFormState] = useState<FormStateType>({
     title: "",
@@ -96,8 +97,9 @@ export default function PostCreate() {
           return;
         }
 
-        let thumbnail = "";
-        if (previewImage) {
+        let thumbnail = post?.thumbnail || "";
+        // 다를때만 cloudinary 사용
+        if (previewImage !== thumbnail) {
           const formData = new FormData();
           formData.append("file", previewImage);
           formData.append("upload_preset", "react_blog");
@@ -111,27 +113,56 @@ export default function PostCreate() {
           // 이미지 업로드가 성공했으면 url 을 thumbnail에 할당
           thumbnail = url;
         }
-        // 게시글 등록 수행
-        const { status } = await axiosInstance.post("/posts", {
-          title: formState.title,
-          category: formState.category,
-          thumbnail: thumbnail,
-          content: formState.content,
-        });
 
-        if (status === 201) {
-          alert("Post added!");
-          navigate("/");
+        if (post) {
+          // 게시글 등록 수행
+          const { status } = await axiosInstance.put(`/posts/${post._id}`, {
+            title: formState.title,
+            category: formState.category,
+            thumbnail: thumbnail,
+            content: formState.content,
+          });
+
+          if (status === 200) {
+            alert("Post updated!");
+            navigate("/post/" + post._id);
+          }
+        } else {
+          // 게시글 등록 수행
+          const { status } = await axiosInstance.post("/posts", {
+            title: formState.title,
+            category: formState.category,
+            thumbnail: thumbnail,
+            content: formState.content,
+          });
+
+          if (status === 201) {
+            alert("Post added!");
+            navigate("/");
+          }
         }
       } catch (e) {
         console.error(e instanceof Error ? e.message : "unknown error");
       }
     });
   };
+  useEffect(() => {
+    if (post) {
+      setFormState({
+        title: post.title,
+        category: post.category,
+        thumbnail: post.thumbnail,
+        content: post.content,
+      });
+      setPreviewImage(post.thumbnail);
+    }
+  }, [post]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Write New Post</h1>
+      <h1 className="text-3xl font-bold text-white mb-8">
+        Write {post ? "Modify" : "New"} Post
+      </h1>
 
       <form action={handleFormAction} className="space-y-6">
         <div>
@@ -258,6 +289,8 @@ export default function PostCreate() {
           >
             {isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
+            ) : post ? (
+              "Modify Post"
             ) : (
               "Publish Post"
             )}
