@@ -7,6 +7,7 @@ import CommentComponent from "../../../components/comment/CommentComponent";
 import { useLoaderData, useNavigate } from "react-router";
 import { format } from "date-fns";
 import { useAuthStore } from "../../../store/authStore";
+import { axiosInstance } from "../../../api/axios";
 
 export default function PostRead() {
   const navigate = useNavigate();
@@ -14,7 +15,14 @@ export default function PostRead() {
     useLoaderData();
   const user = useAuthStore((state) => state.user);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
+  const deletePost = async () => {
+    try {
+      await axiosInstance.delete("/posts/" + post._id);
+      navigate("/");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "unknown error");
+    }
+  };
   // 게시글이 없으면
   if (!post) {
     return (
@@ -66,7 +74,7 @@ export default function PostRead() {
               className="w-10 h-10 rounded-full mr-3"
             />
             <div>
-              <p className="text-white font-medium">{"Jason Francisco"}</p>
+              <p className="text-white font-medium">{post.author.nickname}</p>
               <div className="flex items-center text-sm text-gray-400">
                 <CalendarDays className="h-4 w-4 mr-1" />
                 <span>
@@ -110,8 +118,8 @@ export default function PostRead() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  onClick={deletePost}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors cursor-pointer"
                 >
                   Delete
                 </button>
