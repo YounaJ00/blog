@@ -21,3 +21,10 @@ interface Post {
   createdAt: string;
   comments: Comment[];
 }
+
+interface pagination {
+  totalCount: number;
+  currentPage: number;
+  perPage: number;
+  maxPage: number;
+}

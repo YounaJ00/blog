@@ -2,9 +2,13 @@ import { Clock, Filter, TrendingUp } from "lucide-react";
 import AdBanner from "../../../components/common/AdBanner";
 import Pagination from "./Pagination";
 import { useState } from "react";
+import { useLoaderData } from "react-router";
+import PostCard from "../../../components/post/PostCard";
 
 export default function Posts() {
   const [page, setPage] = useState(1);
+  const { posts, pagination }: { posts: Post[]; pagination: pagination } =
+    useLoaderData();
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
       {/* Header: Title + Filter */}
@@ -45,18 +49,18 @@ export default function Posts() {
 
       {/* Post List - 정적 PostCard 예시 3개 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* <PostCard />
-        <PostCard />
-        <PostCard /> */}
+        {posts && posts.map((post) => <PostCard key={post._id} {...post} />)}
       </div>
 
       {/* Pagination */}
-      <Pagination
-        pageRange={5}
-        currentPage={page}
-        maxPage={20}
-        onPageChange={(page: number) => setPage(page)}
-      />
+      {pagination.maxPage > 1 && (
+        <Pagination
+          pageRange={5}
+          currentPage={page}
+          maxPage={pagination.maxPage}
+          onPageChange={(page: number) => setPage(page)}
+        />
+      )}
       {/* Ad Banner */}
       <div className="mt-12">
         <AdBanner />
