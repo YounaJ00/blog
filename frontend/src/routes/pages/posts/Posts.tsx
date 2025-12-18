@@ -1,16 +1,15 @@
 import { Clock, Filter, TrendingUp } from "lucide-react";
 import AdBanner from "../../../components/common/AdBanner";
 import Pagination from "./Pagination";
-import { useState } from "react";
 import { useLoaderData, useSearchParams } from "react-router";
 import PostCard from "../../../components/post/PostCard";
 
 export default function Posts() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
   const { posts, pagination }: { posts: Post[]; pagination: pagination } =
     useLoaderData();
 
+  const page = parseInt(searchParams.get("page") || "1") ;
   const sort = searchParams.get("sort") || "newest";
   const category = searchParams.get("category") || "";
 
@@ -23,6 +22,12 @@ export default function Posts() {
   const handleCategoryChange = (category: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("category", category);
+    setSearchParams(next);
+  };
+
+  const handlePageChange = (page: number) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("page", String(page));
     setSearchParams(next);
   };
   return (
@@ -88,7 +93,7 @@ export default function Posts() {
           pageRange={5}
           currentPage={page}
           maxPage={pagination.maxPage}
-          onPageChange={(page: number) => setPage(page)}
+          onPageChange={(page: number) => handlePageChange(page)}
         />
       )}
       {/* Ad Banner */}
