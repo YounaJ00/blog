@@ -12,10 +12,17 @@ export default function Posts() {
     useLoaderData();
 
   const sort = searchParams.get("sort") || "newest";
+  const category = searchParams.get("category") || "";
 
   const handleSortChange = (sort: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("sort", sort);
+    setSearchParams(next);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("category", category);
     setSearchParams(next);
   };
   return (
@@ -29,14 +36,18 @@ export default function Posts() {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-slate-800 p-2 rounded-lg">
             <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <select className="bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none">
-              <option>All</option>
-              <option>Technology</option>
-              <option>Lifestyle</option>
-              <option>Travel</option>
-              <option>Business</option>
-              <option>Economy</option>
-              <option>Sports</option>
+            <select
+              className="bg-transparent text-gray-700 dark:text-gray-300 focus:outline-none"
+              value={category}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+            >
+              <option value={""}>All</option>
+              <option value={"Technology"}>Technology</option>
+              <option value={"Lifestyle"}>Lifestyle</option>
+              <option value={"Travel"}>Travel</option>
+              <option value={"Business"}>Business</option>
+              <option value={"Economy"}>Economy</option>
+              <option value={"Sports"}>Sports</option>
             </select>
           </div>
           <div className="flex bg-gray-100 dark:bg-slate-800 rounded-lg">
