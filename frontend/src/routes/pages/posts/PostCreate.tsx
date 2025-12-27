@@ -160,6 +160,8 @@ export default function PostCreate() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-8 py-8">
+      <title>{`${post ? "Modify a Post" : "Create a Post"}`}</title>
+
       <h1 className="text-3xl font-bold text-white mb-8">
         Write {post ? "Modify" : "New"} Post
       </h1>

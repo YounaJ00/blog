@@ -8,6 +8,8 @@ export default function Login() {
   };
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
+      {/* title 은 div 태그에 직접적으로 렌더링 되지 않고, head 태그 사이에 배치가 된다. 즉, 위치적으로 이 위치에 그려지는 것이 아닌 그저 title 값을 가져간다. 화면별로 title 값을 커스터마이징 할 수 있다. */}
+      <title>Login - Youna Log</title>
       <div className="w-full max-w-md">
         <div className="bg-slate-800 rounded-lg shadow-xl p-8">
           {/* 헤더 */}
