@@ -3,13 +3,14 @@ import AdBanner from "../../../components/common/AdBanner";
 import Pagination from "./Pagination";
 import { useLoaderData, useSearchParams } from "react-router";
 import PostCard from "../../../components/post/PostCard";
+import PostZero from "../../../components/post/PostZero";
 
 export default function Posts() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { posts, pagination }: { posts: Post[]; pagination: pagination } =
     useLoaderData();
 
-  const page = parseInt(searchParams.get("page") || "1") ;
+  const page = parseInt(searchParams.get("page") || "1");
   const sort = searchParams.get("sort") || "newest";
   const category = searchParams.get("category") || "";
 
@@ -83,19 +84,25 @@ export default function Posts() {
       </div>
 
       {/* Post List - 정적 PostCard 예시 3개 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts && posts.map((post) => <PostCard key={post._id} {...post} />)}
-      </div>
+      {posts && posts.length > 0 && (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts &&
+              posts.map((post) => <PostCard key={post._id} {...post} />)}
+          </div>
 
-      {/* Pagination */}
-      {pagination.maxPage > 1 && (
-        <Pagination
-          pageRange={5}
-          currentPage={page}
-          maxPage={pagination.maxPage}
-          onPageChange={(page: number) => handlePageChange(page)}
-        />
+          {/* Pagination */}
+          {pagination.maxPage > 1 && (
+            <Pagination
+              pageRange={5}
+              currentPage={page}
+              maxPage={pagination.maxPage}
+              onPageChange={(page: number) => handlePageChange(page)}
+            />
+          )}
+        </>
       )}
+      {posts && posts.length === 0 && <PostZero selectedCategory={category} />}
       {/* Ad Banner */}
       <div className="mt-12">
         <AdBanner />
