@@ -54,7 +54,7 @@ export default function EmailLogin() {
           {/* 헤더 */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">
-              Welcome to SULOG
+              Welcome to Youna Log
             </h1>
             <p className="text-gray-400">
               Please enter your credentials to continue

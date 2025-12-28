@@ -7,7 +7,10 @@ export default function Signup() {
   const navigate = useNavigate();
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [state, formAction, isPending] = useActionState(
-    async (_state: { error: string; payload: FormData }, formData: FormData) => {
+    async (
+      _state: { error: string; payload: FormData },
+      formData: FormData
+    ) => {
       try {
         const email = (formData.get("email") as string) || "";
         const nickname = (formData.get("nickname") as string) || "";
@@ -57,7 +60,7 @@ export default function Signup() {
         <div className="bg-slate-800 rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">
-              Welcome to SULOG
+              Welcome to Youna Log
             </h1>
             <p className="text-gray-400">Create your account</p>
           </div>

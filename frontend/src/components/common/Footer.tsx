@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center mr-2">
               <span className="text-white font-bold">S</span>
             </div>
-            <span className="text-xl font-bold">SULOG</span>
+            <span className="text-xl font-bold">Youna Log</span>
           </div>
           <div className="text-sm text-gray-400">
             © 2025 Template. All Rights Reserved.
